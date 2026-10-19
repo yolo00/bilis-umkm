@@ -44,7 +44,7 @@ Ubah components/TombolWhatsApp.jsx menjadi tautan yang membuka https://wa.me/ ke
 File diubah: components/TombolWhatsApp.jsx
 
 **Perbaikan:**
-**[SENDIRI]** Kesalahan penamaan file admin.js > action.js
+
 
 ## US-04 Login admin
 
@@ -60,7 +60,15 @@ File baru: app/admin/actions.js, lib/supabase/auth.js
 File diubah: app/admin/login/page.jsx, components/NavAdmin.jsx
 
 **Perbaikan:**
+[SENDIRI] 
+Kesalahan penamaan file admin.js > action.js
 
+**[SENDIRI]** 
+Autentikasi admin memiliki urutan eksekusi yang salah. Menekan "Masuk sebagai admin" langsung membawa ke halaman edit, dan keluar/logout baru membuka form login.
+Perbaiki dengan membuat "Masuk sebagai admin: membuka halaman login, dan tombol keluar langsung kembali kehalaman utama.
+
+Kirim hasil perubahan file disini.
+File diubah: pp/admin/actions.js, components/Footer.jsx
 
 ## US-05 Ganti password
 

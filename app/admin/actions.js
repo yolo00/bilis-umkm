@@ -23,9 +23,9 @@ export async function masuk(formData) {
   redirect("/admin");
 }
 
-// US-04: mengakhiri sesi admin lalu kembali ke halaman login.
+// US-04: mengakhiri sesi admin lalu kembali ke halaman utama.
 export async function keluar() {
   const supabase = await buatKlienAuth();
   await supabase.auth.signOut();
-  redirect("/admin/login");
+  redirect("/");
 }
