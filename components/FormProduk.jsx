@@ -1,5 +1,6 @@
 import Input from "@/components/Input";
 import Tombol from "@/components/Tombol";
+import TombolDeskripsiAI from "@/components/TombolDeskripsiAI";
 
 const PESAN_GALAT = {
   nama: "Nama produk wajib diisi (maksimal 200 karakter).",
@@ -38,6 +39,7 @@ export default function FormProduk({ produk = {}, labelTombol, action, galat }) 
         defaultValue={produk.foto_url}
       />
       <Input label="Deskripsi" name="deskripsi" textarea defaultValue={produk.deskripsi} />
+      <TombolDeskripsiAI />
       <div className="flex gap-3">
         <Tombol type="submit">{labelTombol}</Tombol>
         <Tombol href="/admin" varian="garis">

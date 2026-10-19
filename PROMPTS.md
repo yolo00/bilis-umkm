@@ -180,10 +180,18 @@ Catatan perubahan:
 
 
 
-## US-14 
+## US-14 Deskripsi produk dibuat AI
 
 **Prompt:**
+[SENDIRI] Bisa gak yah US-14 dalam 3 menit? API kosongkan
 
 **Hasil:**
+File baru: components/TombolDeskripsiAI.jsx
+File diubah: app/admin/actions.js, components/FormProduk.jsx, .env.example
+
+Catatan perubahan:
+- Di form tambah dan ubah produk ada tombol "Buat deskripsi dengan AI". Tombol membaca nama dan kategori, lalu mengisi kolom Deskripsi; admin tetap bisa mengubahnya sebelum menyimpan.
+- Server Action buatDeskripsiAI memanggil Gemini API di server (model gemini-2.5-flash, bisa diganti lewat GEMINI_MODEL) dan memeriksa login admin lebih dulu.
+- Kunci API dibaca dari GEMINI_API_KEY dan sengaja dikosongkan di .env.example. Selama kosong, tombol menampilkan pesan "Fitur AI belum aktif".
 
 **Perbaikan:**

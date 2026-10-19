@@ -135,3 +135,47 @@ export async function hapusProduk(formData) {
   segarkanHalamanProduk();
   redirect("/admin?status=dihapus");
 }
+// US-14: buat deskripsi produk dengan AI (Gemini API) dari nama dan kategori.
+// Kunci API dibaca dari GEMINI_API_KEY (hanya di server, tanpa awalan NEXT_PUBLIC_).
+export async function buatDeskripsiAI(nama, kategori) {
+  // Aturan keamanan #3: hanya admin yang sudah login yang boleh memakai fitur ini.
+  await pastikanAdmin();
+
+  const namaProduk = String(nama ?? "").trim().slice(0, 200);
+  const kategoriProduk = String(kategori ?? "").trim().slice(0, 100);
+  if (!namaProduk) return { galat: "Isi nama produk dulu, lalu buat deskripsinya." };
+
+  const kunci = process.env.GEMINI_API_KEY;
+  if (!kunci) {
+    return { galat: "Fitur AI belum aktif. Isi GEMINI_API_KEY di environment variable lalu jalankan ulang aplikasi." };
+  }
+
+  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const perintah =
+    `Tulis deskripsi singkat untuk produk UMKM dalam bahasa Indonesia, 2 sampai 3 kalimat (maksimal 50 kata), ` +
+    `ramah dan menarik untuk pembeli. Jangan mengarang fakta yang tidak ada (bahan, ukuran, harga, klaim kesehatan). ` +
+    `Tulis teks biasa tanpa tanda bintang, judul, atau daftar.\n` +
+    `Nama produk: ${namaProduk}\nKategori: ${kategoriProduk || "(tidak disebutkan)"}`;
+
+  try {
+    const respons = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-goog-api-key": kunci },
+        body: JSON.stringify({ contents: [{ parts: [{ text: perintah }] }] }),
+        signal: AbortSignal.timeout(20000),
+        cache: "no-store",
+      }
+    );
+    if (!respons.ok) {
+      return { galat: "Gagal membuat deskripsi (layanan AI menolak permintaan). Periksa GEMINI_API_KEY lalu coba lagi." };
+    }
+    const hasil = await respons.json();
+    const teks = hasil?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if (!teks) return { galat: "AI tidak mengembalikan deskripsi. Coba lagi." };
+    return { deskripsi: teks.replace(/[*#]/g, "").trim() };
+  } catch {
+    return { galat: "Gagal menghubungi layanan AI. Periksa koneksi internet lalu coba lagi." };
+  }
+}
