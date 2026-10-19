@@ -1,11 +1,30 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import DaftarkanSW from "@/components/DaftarkanSW";
 import { toko } from "@/lib/toko";
 
 export const metadata = {
   title: toko.nama,
   description: toko.tagline,
+  applicationName: toko.nama,
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/icon-192.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: toko.nama,
+    statusBarStyle: "default",
+  },
+};
+
+// US-13: tampilan mobile. themeColor sama dengan token `utama` di app/globals.css.
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#1f6b4f",
 };
 
 export default function RootLayout({ children }) {
@@ -23,6 +42,7 @@ export default function RootLayout({ children }) {
         <Header />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4">{children}</main>
         <Footer />
+        <DaftarkanSW />
       </body>
     </html>
   );

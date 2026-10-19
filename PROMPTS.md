@@ -118,31 +118,66 @@ app/admin/produk/[id]/ubah/page.jsx
 **Perbaikan:**
 
 
-## US-11 
+## US-11
 
 **Prompt:**
+US-11 Filter kategori atau pencarian.
+
+Pada halaman utama, disamping "Produk Kami"  buat tombol untuk pilih kategori, tunjukkan 3 kategori paling banyak opsinya, selebihnya buat dalam sebuah tombol dropdown untuk memilih kategori pencarian. Produk dengan kategori yang dipilih akan ditampilkan, sedangkan yang lain disembunyikan. Bisa piih 2 atau lebih kategori, tidak mesti sebuah produk memenuhi seluruh kategori yang dipilih.
 
 **Hasil:**
+File baru: components/KatalogProduk.jsx
+File diubah: app/page.jsx
+
+Catatan perubahan:
+- Data produk tetap diambil di server (app/page.jsx); penyaringan dilakukan di KatalogProduk (client component) tanpa akses Supabase dari browser.
+- Di samping judul "Produk kami" ada tombol "Semua", 3 kategori dengan produk terbanyak (sama banyak: urut abjad), dan tombol dropdown "Kategori lain" berisi kategori sisanya dengan kotak centang dan jumlah produk.
+- Bisa memilih 2 kategori atau lebih: produk tampil jika cocok dengan salah satu kategori terpilih (gabungan, bukan irisan). Produk di luar pilihan disembunyikan. "Semua" menghapus pilihan.
+- Dropdown tertutup saat klik di luar atau menekan Escape. Produk tanpa kategori hanya tampil saat tidak ada kategori yang dipilih.
 
 **Perbaikan:**
 
 
-## US-12 
+
+## US-12
 
 **Prompt:**
+US-12 Pilih jumlah produk.
+
+Pengguna dapat memilih jumlah produk saat memesan. Jumlah produk yang dipilih langsung dikirimkan ke pesan wa.
 
 **Hasil:**
+File diubah: components/TombolWhatsApp.jsx
+
+Catatan perubahan:
+- Di halaman detail produk ditambah pemilih jumlah (tombol − dan +, atau ketik langsung), minimal 1 dan maksimal 99. Kolom yang dikosongkan kembali ke 1.
+- Total harga (harga x jumlah) tampil di samping pemilih jumlah.
+- Pesan WhatsApp otomatis berisi nama, jumlah, harga per item, dan total; berubah langsung mengikuti jumlah yang dipilih. Pesan tetap di-encode dengan encodeURIComponent dan dibuka di tab baru.
+- TombolWhatsApp kini client component (memakai state); file app/produk/[id]/page.jsx tidak berubah.
 
 **Perbaikan:**
 
 
-## US-13 
+
+## US-13
 
 **Prompt:**
+US-13 PWA
+
+Adapatasi tampilan web saat ini agar dapat digunakan dalam format mobile.
 
 **Hasil:**
+File baru: app/manifest.js, public/sw.js, components/DaftarkanSW.jsx
+File diubah: app/layout.jsx, app/globals.css, components/Tombol.jsx, components/NavAdmin.jsx, components/Footer.jsx, components/TabelProduk.jsx
+
+Catatan perubahan:
+- PWA: manifest (nama, ikon 192 dan 512 dari public/icons, mode standalone, warna tema sama dengan token `utama`), meta viewport dengan viewport-fit=cover, theme color, ikon Apple, dan service worker minimal (public/sw.js) yang didaftarkan hanya di versi produksi. Service worker tidak menyimpan cache, jadi data produk dan halaman admin selalu terbaru; saat offline tampil pesan singkat.
+- Tampilan mobile: tombol dan tautan minimal setinggi 44 px (Tombol, NavAdmin, tautan footer), ruang aman untuk notch dan garis navigasi, tanpa jeda ketuk ganda, dan teks tidak membesar sendiri saat HP diputar.
+- Halaman admin: daftar produk berupa kartu di layar HP dan tabel di layar lebar (TabelProduk).
+- Diuji di lebar 390 px: tidak ada gulir horizontal, manifest dan service worker terbaca.
 
 **Perbaikan:**
+
 
 
 ## US-14 

@@ -1,4 +1,4 @@
-import KartuProduk from "@/components/KartuProduk";
+import KatalogProduk from "@/components/KatalogProduk";
 import { toko } from "@/lib/toko";
 import { createServerClient } from "@/lib/supabase/server";
 
@@ -20,27 +20,20 @@ export default async function HalamanKatalog() {
       </section>
 
       <section aria-labelledby="judul-produk" className="flex flex-col gap-5">
-        <h2 id="judul-produk" className="text-xl font-bold">
-          Produk kami
-        </h2>
-
         {error ? (
-          <p className="rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
-            Gagal memuat produk: {error.message}
-          </p>
-        ) : daftarProduk.length === 0 ? (
-          <p className="py-12 text-center text-teks-lembut">
-            Belum ada produk.
-          </p>
+          <>
+            <h2 id="judul-produk" className="text-xl font-bold">
+              Produk kami
+            </h2>
+            <p className="rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+              Gagal memuat produk: {error.message}
+            </p>
+          </>
         ) : (
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-            {daftarProduk.map((produk) => (
-              <KartuProduk key={produk.id} produk={produk} />
-            ))}
-          </div>
+          // US-11: data diambil di server, penyaringan kategori dilakukan di KatalogProduk.
+          <KatalogProduk daftarProduk={daftarProduk} />
         )}
       </section>
     </>
   );
 }
-
