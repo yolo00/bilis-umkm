@@ -73,23 +73,29 @@ File diubah: pp/admin/actions.js, components/Footer.jsx
 ## US-05 Ganti password
 
 **Prompt:**
-Baca AGENTS.md aturan keamanan nomor 3 dan 4, dan docs/user-stories.md bagian US-06.
+Baca docs/user-stories.md bagian US-05.
 
-Buat file proxy.js di root proyek (Next.js 16). Semua rute /admin kecuali /admin/login wajib login dengan Supabase Auth; kalau belum login, alihkan ke /admin/login. Pastikan juga setiap Server Action yang mengubah data memeriksa login di server. Hapus CatatanBelumAktif dari halaman /admin.
+Buat Server Action ganti password di app/admin/actions.js untuk admin yang sedang login, memakai Supabase Auth. Validasi di server: password baru minimal 8 karakter dan harus sama dengan konfirmasi. Tampilkan pesan berhasil atau pesan error yang jelas di halaman. Sambungkan ke form di app/admin/password/page.jsx tanpa mengubah tampilannya. Hapus CatatanBelumAktif dari halaman ini.
 
 Kirim hasil perubahan file disini.
 
+
 **Hasil:**
-File baru: proxy.js
-File diubah: app/admin/page.jsx
+File diubah: app/admin/actions.js, app/admin/password/page.jsx
 
 **Perbaikan:**
 
 ## US-06 Proteksi halaman admin
 
 **Prompt:**
+Baca AGENTS.md aturan keamanan nomor 3 dan 4, dan docs/user-stories.md bagian US-06.
 
+Buat file proxy.js di root proyek (Next.js 16). Semua rute /admin kecuali /admin/login wajib login dengan Supabase Auth; kalau belum login, alihkan ke /admin/login. Pastikan juga setiap Server Action yang mengubah data memeriksa login di server. Hapus CatatanBelumAktif dari halaman /admin.
+
+Kirim hasil perubahan file disini.
 **Hasil:**
+File baru: proxy.js
+File diubah: app/admin/page.jsx
 
 **Perbaikan:**
 
