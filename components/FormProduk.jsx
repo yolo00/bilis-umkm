@@ -1,11 +1,26 @@
 import Input from "@/components/Input";
 import Tombol from "@/components/Tombol";
 
-// Dipakai untuk tambah produk (US-08) dan ubah produk (US-09). Keduanya bonus di jalur offline.
-// Nama field sama dengan kolom tabel "produk".
-export default function FormProduk({ produk = {}, labelTombol }) {
+const PESAN_GALAT = {
+  nama: "Nama produk wajib diisi (maksimal 200 karakter).",
+  harga: "Harga harus berupa angka bulat, 0 atau lebih.",
+  foto: "Link foto harus diawali https://, http://, atau / (contoh: /produk/kopi.svg).",
+  gangguan: "Produk gagal disimpan karena ada gangguan. Coba lagi beberapa saat lagi.",
+};
+
+// Dipakai untuk tambah produk (US-08) dan ubah produk (US-09).
+// Nama field sama dengan kolom tabel "produk". `action` adalah Server Action penyimpan,
+// `galat` adalah kode error dari hasil validasi server.
+export default function FormProduk({ produk = {}, labelTombol, action, galat }) {
+  const pesanGalat = PESAN_GALAT[galat];
+
   return (
-    <form className="flex max-w-xl flex-col gap-4">
+    <form action={action} className="flex max-w-xl flex-col gap-4">
+      {pesanGalat && (
+        <p role="alert" className="text-sm font-semibold text-bahaya">
+          {pesanGalat}
+        </p>
+      )}
       <Input label="Nama produk" name="nama" defaultValue={produk.nama} required />
       <Input
         label="Harga (Rp)"

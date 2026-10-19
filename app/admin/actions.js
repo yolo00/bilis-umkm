@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { buatKlienAuth, pastikanAdmin } from "@/lib/supabase/auth";
 
 // US-04: login admin memakai Supabase Auth (email dan password), diproses di server.
@@ -55,4 +56,82 @@ export async function gantiPassword(formData) {
   }
 
   redirect("/admin/password?status=berhasil");
+}
+
+// ---------- Kelola produk (US-08, US-09, US-10) ----------
+
+// Membaca dan memvalidasi isi form produk di server. Mengembalikan { data } atau { galat }.
+function bacaFormProduk(formData) {
+  const nama = String(formData.get("nama") ?? "").trim();
+  const harga = String(formData.get("harga") ?? "").trim();
+  const kategori = String(formData.get("kategori") ?? "").trim();
+  const fotoUrl = String(formData.get("foto_url") ?? "").trim();
+  const deskripsi = String(formData.get("deskripsi") ?? "").trim();
+
+  if (!nama || nama.length > 200) return { galat: "nama" };
+  if (!/^\d+$/.test(harga) || Number(harga) > 2147483647) return { galat: "harga" };
+  // Link foto boleh kosong; kalau diisi harus http(s) atau path lokal seperti /produk/kopi.svg.
+  if (fotoUrl && !/^(https?:\/\/\S+|\/(?!\/)\S*)$/.test(fotoUrl)) return { galat: "foto" };
+
+  return {
+    data: {
+      nama,
+      harga: Number(harga),
+      kategori: kategori || null,
+      foto_url: fotoUrl || null,
+      deskripsi: deskripsi || null,
+    },
+  };
+}
+
+// Muat ulang halaman yang menampilkan produk supaya data terbaru langsung tampil.
+function segarkanHalamanProduk() {
+  revalidatePath("/admin");
+  revalidatePath("/");
+  revalidatePath("/produk/[id]", "page");
+}
+
+// US-08: tambah produk.
+export async function tambahProduk(formData) {
+  const { supabase } = await pastikanAdmin();
+
+  const hasil = bacaFormProduk(formData);
+  if (hasil.galat) redirect(`/admin/produk/baru?galat=${hasil.galat}`);
+
+  const { error } = await supabase.from("produk").insert(hasil.data);
+  if (error) redirect("/admin/produk/baru?galat=gangguan");
+
+  segarkanHalamanProduk();
+  redirect("/admin?status=ditambah");
+}
+
+// US-09: ubah produk. Dipasang ke form dengan ubahProduk.bind(null, id).
+export async function ubahProduk(id, formData) {
+  const { supabase } = await pastikanAdmin();
+
+  const idProduk = String(id);
+  if (!/^\d+$/.test(idProduk)) redirect("/admin");
+
+  const hasil = bacaFormProduk(formData);
+  if (hasil.galat) redirect(`/admin/produk/${idProduk}/ubah?galat=${hasil.galat}`);
+
+  const { error } = await supabase.from("produk").update(hasil.data).eq("id", idProduk);
+  if (error) redirect(`/admin/produk/${idProduk}/ubah?galat=gangguan`);
+
+  segarkanHalamanProduk();
+  redirect("/admin?status=diubah");
+}
+
+// US-10: hapus produk. Konfirmasi ditampilkan di browser oleh components/TombolHapus.jsx.
+export async function hapusProduk(formData) {
+  const { supabase } = await pastikanAdmin();
+
+  const idProduk = String(formData.get("id") ?? "");
+  if (!/^\d+$/.test(idProduk)) redirect("/admin?galat=hapus");
+
+  const { error } = await supabase.from("produk").delete().eq("id", idProduk);
+  if (error) redirect("/admin?galat=hapus");
+
+  segarkanHalamanProduk();
+  redirect("/admin?status=dihapus");
 }

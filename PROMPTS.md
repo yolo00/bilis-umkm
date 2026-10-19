@@ -99,6 +99,56 @@ File diubah: app/admin/page.jsx
 
 **Perbaikan:**
 
-## Debugging dan fitur bonus
+## US-07 
 
-Tambahkan bagian baru untuk setiap error yang kamu perbaiki atau fitur bonus yang kamu kerjakan.
+**Prompt:**
+US-07, 08, 09, 10. Admin dapat melihat isi produk sesuai database, dan menambahkan produk baru, mengubah data produk, dan menghapus data produk dari database.
+
+Perbarui halaman app/admin/page.jsx dan file terkait agar admin dapat melakukan CRUD terhadap isi database. Penghapusan data harus ada peringatan untuk konfirmasi hapus data. Setiap kali proses CRUD berlangsung, page utama langsung refresh dan menampilkan data terbaru.
+
+**Hasil:**
+app/admin/page.jsx
+components/TabelProduk.jsx
+components/FormProduk.jsx
+components/TombolHapus.jsx
+app/admin/actions.js
+app/admin/produk/baru/page.jsx
+app/admin/produk/[id]/ubah/page.jsx
+
+**Perbaikan:**
+
+
+## US-11 
+
+**Prompt:**
+
+**Hasil:**
+
+**Perbaikan:**
+
+
+## US-12 
+
+**Prompt:**
+
+**Hasil:**
+
+**Perbaikan:**
+
+
+## US-13 
+
+**Prompt:**
+
+**Hasil:**
+
+**Perbaikan:**
+
+
+## US-14 
+
+**Prompt:**
+
+**Hasil:**
+
+**Perbaikan:**
